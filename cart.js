@@ -1,51 +1,54 @@
 document.addEventListener("DOMContentLoaded", () => {
   const updateTotal = () => {
     let total = 0;
-    document.querySelectorAll(".cart-item").forEach(item => {
-      const price = parseFloat(item.querySelector(".item-price").textContent);
-      const quantity = parseInt(item.querySelector(".quantity").textContent);
+    document.querySelectorAll(".card").forEach(card => {
+      const priceText = card.querySelector(".unit-price").textContent;
+      const price = parseFloat(priceText.replace("$", "").trim());
+      const quantity = parseInt(card.querySelector(".quantity").textContent);
       total += price * quantity;
     });
-    document.getElementById("total-price").textContent = total.toFixed(2);
+    document.querySelector(".total").textContent = total + " $";
   };
 
-  // Handle quantity increase
-  document.querySelectorAll(".plus").forEach(button => {
-    button.addEventListener("click", () => {
-      const quantityElement = button.parentElement.querySelector(".quantity");
-      quantityElement.textContent = parseInt(quantityElement.textContent) + 1;
+  // Handle plus button click
+  document.querySelectorAll(".fa-plus-circle").forEach(plusBtn => {
+    plusBtn.addEventListener("click", () => {
+      const quantitySpan = plusBtn.parentElement.querySelector(".quantity");
+      quantitySpan.textContent = parseInt(quantitySpan.textContent) + 1;
       updateTotal();
     });
   });
 
-  // Handle quantity decrease
-  document.querySelectorAll(".minus").forEach(button => {
-    button.addEventListener("click", () => {
-      const quantityElement = button.parentElement.querySelector(".quantity");
-      let currentQty = parseInt(quantityElement.textContent);
-      if (currentQty > 1) {
-        quantityElement.textContent = currentQty - 1;
+  // Handle minus button click
+  document.querySelectorAll(".fa-minus-circle").forEach(minusBtn => {
+    minusBtn.addEventListener("click", () => {
+      const quantitySpan = minusBtn.parentElement.querySelector(".quantity");
+      let currentQty = parseInt(quantitySpan.textContent);
+      if (currentQty > 0) {
+        quantitySpan.textContent = currentQty - 1;
         updateTotal();
       }
     });
   });
 
-  // Handle item deletion
-  document.querySelectorAll(".delete").forEach(button => {
-    button.addEventListener("click", () => {
-      button.closest(".cart-item").remove();
+  // Handle trash icon click (delete item)
+  document.querySelectorAll(".fa-trash-alt").forEach(trashBtn => {
+    trashBtn.addEventListener("click", () => {
+      const cardBody = trashBtn.closest(".card-body");
+      cardBody.remove();
       updateTotal();
     });
   });
 
-  // Handle liking items
-  document.querySelectorAll(".like").forEach(button => {
-    button.addEventListener("click", () => {
-      button.classList.toggle("liked");
-      button.textContent = button.classList.contains("liked") ? "❤️" : "♡";
+  // Handle heart icon click (like)
+  document.querySelectorAll(".fa-heart").forEach(heartIcon => {
+    heartIcon.addEventListener("click", () => {
+      heartIcon.classList.toggle("liked");
+      heartIcon.style.color = heartIcon.classList.contains("liked") ? "red" : "black";
     });
   });
 
-  // Initial total update
+  // Initial total
   updateTotal();
 });
+
